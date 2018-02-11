@@ -46,3 +46,5 @@ public static EmployeeDataType getTypeUsingValue(String value){
 	
 }
 };
+
+// ordinal method is used in enum to get the position of constant in the enum starting with 0 just like an array

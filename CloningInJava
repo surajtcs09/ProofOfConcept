@@ -1,4 +1,5 @@
 /************************************ Concept 1 ******************************************************************
+ * Cloning is required to preserve the state of the object and maintain backup copy. 
  * clone() method is present in java.lang.Object. It has protected access. 
  * Since, it is present in java.lang.Object and it can be accessed by an class as every class is an subclass of Object class. 
  * But, there is some restriction due to protected access. 

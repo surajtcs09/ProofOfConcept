@@ -1,0 +1,2 @@
+1. protected void finalize() method present in java.lang.Object called by garbage collector to clean up the objects.
+while finally{} block used to clean up the object which are used in try block.

@@ -1,0 +1,377 @@
+/******************************** Concept1 ****************************************
+ *  Singleton means only one instance of the object is created throughout the execution of the program. 
+ *  We can create as many instances we want, but all those instance will refer to the same object. 
+ * If changes made in any one object, changes will be reflected in all the objects also becuase they all will be refering to 
+ * the same object. 
+ *
+ */
+ package learn.singleton;
+
+class Singleton2{
+	int x,y;
+	private static Singleton2 s1obj;
+	private Singleton2(){
+		x=300;
+		y=400;
+	}
+	public static Singleton2 getInstance(){
+		if(s1obj==null)
+			s1obj = new Singleton2();
+		return s1obj;
+	}
+}
+public class SingletonBasic {
+	public static void main(String[] args){
+		Singleton2 s1obj = Singleton2.getInstance();
+		System.out.println("x="+s1obj.x);
+		System.out.println("y="+s1obj.y);
+		
+		s1obj.x=30;
+		Singleton2 s2obj = Singleton2.getInstance();
+		System.out.println("Another instance of Singleton: ");
+		System.out.println("x="+s2obj.x);
+		System.out.println("y="+s2obj.y);
+		Singleton2 s3obj = Singleton2.getInstance();
+		s3obj.x=3000;
+		System.out.println("Another instance of Singleton");
+		System.out.println("x="+s3obj.x);
+		System.out.println("y="+s3obj.y);
+		System.out.println("Instance of Singleton: s2obj called after change in s3obj");
+		System.out.println("x="+s2obj.x);
+		System.out.println("y="+s2obj.y);
+		System.out.println("This proves that there is sinlge instance of Singleton2 object"
+				+ "\n becuase changes done in any instance is visible in another instance too."
+				+ "\n as they all are references pointing to one object only");
+		
+	}
+}
+// Output:
+Singleton Instance: s1obj
+x=300
+y=400
+Another instance of Singleton: s2obj
+x=30
+y=400
+Another instance of Singleton: s3obj
+x=3000
+y=400
+Instance of Singleton: s2obj called after change in s3obj
+x=3000
+y=400
+Instance of Singleton: s1obj called after change in s3obj
+x=3000
+y=400
+This proves that there is sinlge instance of Singleton2 object
+ becuase changes done in any instance is visible in another instance too.
+ as they all are references pointing to one object only
+
+
+/*************************************************** Concept2 **************
+ *  Concept of cloning in singleton
+ *  Since, clone() in java.lang.Object is protected, then clone() cannot be called directly in any class with the Singleton 
+ *  object as there will be vision issue
+ *  This is because protected methods can only be in any other subclass of base class by the same subclass object only. 
+ *  Now, if we implement the clone() in the Singleton class and refer it to the static factory method for object creation, 
+ *  then there is no problem. 
+ *  So, we need to override the clone() method in Singleton class
+ *  Now, in the implementation logic if we return super.clone(), then a new instance of the object will be created, rather than pointing
+ *  pointing to the same object. 
+ */
+ package learn.singleton;
+
+class Singleton4 implements Cloneable{
+	int x,y;
+	private static Singleton4 s1obj;
+	private Singleton4(){
+		x=300;
+		y=400;
+	}
+	public static Singleton4 getInstance(){
+		if(s1obj==null)
+			s1obj = new Singleton4();
+		return s1obj;
+	}
+	public Object clone(){
+		Singleton4 sobjNew = null ;
+		try {
+			sobjNew = (Singleton4) super.clone();
+		} catch (CloneNotSupportedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return sobjNew;
+	}
+}
+public class SingletonCloneImplementation {
+	public static void main(String[] args){
+		Singleton4 s1obj = Singleton4.getInstance();
+		System.out.println("Singleton Instance: s1obj");
+		System.out.println("x="+s1obj.x);
+		System.out.println("y="+s1obj.y);
+		
+		s1obj.x=30;
+		Singleton4 s2obj = Singleton4.getInstance();
+		System.out.println("Another instance of Singleton: s2obj");
+		System.out.println("x="+s2obj.x);
+		System.out.println("y="+s2obj.y);
+		Singleton4 s3obj = (Singleton4) s2obj.clone();
+		s3obj.x=3000;
+		System.out.println("Another instance of Singleton: s3obj");
+		System.out.println("x="+s3obj.x);
+		System.out.println("y="+s3obj.y);
+		System.out.println("Instance of Singleton: s2obj called after change in s3obj");
+		System.out.println("x="+s2obj.x);
+		System.out.println("y="+s2obj.y);
+		System.out.println("Instance of Singleton: s1obj called after change in s3obj");
+		System.out.println("x="+s1obj.x);
+		System.out.println("y="+s1obj.y);
+		System.out.println("Here, s3obj is created using clone(). If any change done in s3obj, then it"
+				+ "does not reflect to the other object. This means cloning violates the concept of "
+				+ "Singleton (i.e. creating only one instance of the object. To avoid this we need to point the"
+				+ "clone() to static factory method for object creation. ");
+		
+	}
+}
+Output: 
+Singleton Instance: s1obj
+x=300
+y=400
+Another instance of Singleton: s2obj
+x=30
+y=400
+Another instance of Singleton: s3obj
+x=3000
+y=400
+Instance of Singleton: s2obj called after change in s3obj
+x=30
+y=400
+Instance of Singleton: s1obj called after change in s3obj
+x=30
+y=400
+Here, s3obj is created using clone(). If any change done in s3obj, then it
+does not reflect to the other object. This means cloning violates the concept of 
+Singleton (i.e. creating only one instance of the object. To avoid this we need to point the
+clone() to static factory method for object creation. 
+
+
+/*********************** Solution of concept 2 *********
+ * One easy solution is override the clone() but does not implement Cloneable interface
+ * This will throw CloneNotSupportedException and will not allow to create the object. 
+ * But, this will break the application as the exception is raised. 
+ * So, better option is to overide the clone() but do not call super.clone(), instead 
+ * call static factory method used for object creation. 
+ * If this is done, then it is full proof that now Singleton is 100% singleton by nature. 
+ *
+ */
+package learn.singleton;
+
+class Singleton5{
+	int x,y;
+	private static Singleton5 s1obj;
+	private Singleton5(){
+		x=300;
+		y=400;
+	}
+	public static Singleton5 getInstance(){
+		if(s1obj==null)
+			s1obj = new Singleton5();
+		return s1obj;
+	}
+	public Object clone(){
+	
+			return Singleton5.getInstance();
+	}
+}
+public class SingletonCloneSolution {
+	public static void main(String[] args){
+		Singleton5 s1obj = Singleton5.getInstance();
+		System.out.println("Singleton Instance: s1obj");
+		System.out.println("x="+s1obj.x);
+		System.out.println("y="+s1obj.y);
+		
+		s1obj.x=30;
+		Singleton5 s2obj = Singleton5.getInstance();
+		System.out.println("Another instance of Singleton: s2obj");
+		System.out.println("x="+s2obj.x);
+		System.out.println("y="+s2obj.y);
+		Singleton5 s3obj = (Singleton5) s2obj.clone();
+		s3obj.x=3000;
+		System.out.println("Another instance of Singleton: s3obj");
+		System.out.println("x="+s3obj.x);
+		System.out.println("y="+s3obj.y);
+		System.out.println("Instance of Singleton: s2obj called after change in s3obj");
+		System.out.println("x="+s2obj.x);
+		System.out.println("y="+s2obj.y);
+		System.out.println("Instance of Singleton: s1obj called after change in s3obj");
+		System.out.println("x="+s1obj.x);
+		System.out.println("y="+s1obj.y);
+		System.out.println("Here, s3obj is created using clone(). If any change done in s3obj, then it"
+				+ "\ndoes reflect to the other object as clone() is itself using static"
+				+ "\nfactory method for the object creation. This means cloning violates the concept of "
+				+ "\nSingleton (i.e. creating only one instance of the object. To avoid this we need to point the"
+				+ "\nclone() to static factory method for object creation. ");
+		
+	}
+}
+Output: 
+Singleton Instance: s1obj
+x=300
+y=400
+Another instance of Singleton: s2obj
+x=30
+y=400
+Another instance of Singleton: s3obj
+x=3000
+y=400
+Instance of Singleton: s2obj called after change in s3obj
+x=3000
+y=400
+Instance of Singleton: s1obj called after change in s3obj
+x=3000
+y=400
+Here, s3obj is created using clone(). If any change done in s3obj, then it
+does reflect to the other object as clone() is itself using static
+factory method for the object creation. This means cloning violates the concept of 
+Singleton (i.e. creating only one instance of the object. To avoid this we need to point the
+clone() to static factory method for object creation. 
+
+
+/*********************************** Another solution of concept 2 
+ * Not implementing the clone() in Singleton class
+ * Some people would say what if clone() is protected member in Object() and it will not visible in for Singleton 
+ * in any other class, then what is the need to implement it. It will save us from creating the object. 
+ * No, it will not save it from creating the object. 
+ * Suppose, Singleton class is the subclass of another class, which is implementing the clone() and made it public instead of 
+ * protected. 
+ * Then, even if the clone() is not implemented in Singleton class and since it's implementation is done in its superclass 
+ * and it's visibility is public there, so it can be called. 
+ * So, here comes the same problem, another instance of Singleton class is created. 
+ * See, below example. 
+ */
+ package learn.singleton;
+
+class Singleton3 extends Singleton3Super{
+	int x,y;
+	private static Singleton3 s1obj;
+	private Singleton3(){
+		x=300;
+		y=400;
+	}
+	public static Singleton3 getInstance(){
+		if(s1obj==null)
+			s1obj = new Singleton3();
+		return s1obj;
+	}
+}
+class Singleton3Super implements Cloneable{
+	Singleton3Super s3s;
+	public Object clone(){
+		try {
+			s3s= (Singleton3Super) super.clone();
+		} catch (CloneNotSupportedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return s3s;
+		
+	}
+}
+public class SingletonClone {
+	public static void main(String[] args){
+		 Singleton3 s3obj1= Singleton3.getInstance();
+		 System.out.println("Instance of Singleton: s3obj1");
+		 System.out.println("x="+s3obj1.x);
+		 System.out.println("y="+s3obj1.y);
+		 
+		 Singleton3 s3obj2= (Singleton3) Singleton3.getInstance().clone();
+		 System.out.println("Instance of Singleton created using clone: s3obj2");
+		 System.out.println("x="+s3obj2.x);
+		 System.out.println("y="+s3obj2.y);
+		 
+		 s3obj1.x=30;
+		 System.out.println("Changes done in s3obj1 object");
+		 System.out.println("After change:");
+		 System.out.println("Instance of Singleton: s3obj1");
+		 System.out.println("x="+s3obj1.x);
+		 System.out.println("y="+s3obj1.y);
+		 System.out.println("Instance of Singleton created using clone: s3obj2");
+		 System.out.println("x="+s3obj2.x);
+		 System.out.println("y="+s3obj2.y);
+		 
+		 System.out.println("Here, even after changing the s3obj1, s3obje is not changed becuase"
+		 		+ "\nthey are referring to different object. So,"
+		 		+ "\nAbove code shows that we can create a new object of "
+		 		+ "\nSingleton class using cloning if any superclass of Singleton class "
+		 		+ "\nhas overridden the clone()");
+		 
+	}
+}
+//Output:
+Instance of Singleton: s3obj1
+x=300
+y=400
+Instance of Singleton created using clone: s3obj2
+x=300
+y=400
+Changes done in s3obj1 object
+After change:
+Instance of Singleton: s3obj1
+x=30
+y=400
+Instance of Singleton created using clone: s3obj2
+x=300
+y=400
+Here, even after changing the s3obj1, s3obje is not changed becuase
+they are referring to different object. So,
+Above code shows that we can create a new object of 
+Singleton class using cloning if any superclass of Singleton class 
+has overridden the clone()
+
+
+***************************************************************************************************************************************
+***************************************************************************************************************************************
+Note: 
+The best approach to protect the singleton behaviour of Singleton class is override the clone() in Singleton class 
+and instead of writing super.clone(), redirect it to static factory method of Singleton class. 
+In the static factory method of Singleton class, we are already implementing the filter that if the object has been created
+then return that created object, only. 
+
+This way it makes it safe from every angle(except mulithreaded application angle) to sustain singleton behaviour. 
+
+Above things are true only if static factory method is called by single thread only at a time. 
+Now, if multiple threads tries to call this method at a time, then this concept fails. 
+For this we need to use the concept of synchronication for static factory method used for object creation. 
+
+***************************************************************************************************************************************
+***************************************************************************************************************************************
+
+// Code for full-proof Singleton Class
+package learn.singleton;
+
+/*Singleton class must implement Cloneable interface as if
+clone() is overridden and Cloneable is not implemented, then it
+will throw CloneNotSupportedException and it will unnecessarily 
+stop the flow of execution.*/
+public class Singleton implements Cloneable{
+	private static Singleton instance;
+	
+	/*Static factory method will check instance is already created, then return 
+	the same instance only. If instance is null, then only create a new 
+	instance*/
+	public static synchronized Singleton getInstance(){
+		if(instance==null)
+			instance = new Singleton();
+		return instance;
+	}
+	
+    /*clone() is overridden because in future if Singleton is made the subclass of 
+    class which is overriding the clone() and raised the visibilty of clone() 
+    from protected to public, then clone() can be used by Singleton class object 
+    to create a new instance of the object. 
+    So, it's safe to override the clone() and point it to the static factory method
+    for the object creation. */
+	public Object clone(){
+		return Singleton.getInstance();
+	}
+	
+}

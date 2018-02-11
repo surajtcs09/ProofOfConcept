@@ -459,3 +459,9 @@ test2.test1Obj.x  is also changed. This is because test1Obj is just the referenc
 In its cloned object, Test1 object is not created separately.
 This is called Shallow cloning.
 
+*************************************************************************************************************************
+*************************************************************************************************************************
+Other points: 
+
+1. Creating duplicate object is called cloning not the another reference of the object.
+2. 

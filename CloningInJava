@@ -1,0 +1,460 @@
+/************************************ Concept 1 ******************************************************************
+ * clone() method is present in java.lang.Object. It has protected access. 
+ * Since, it is present in java.lang.Object and it can be accessed by an class as every class is an subclass of Object class. 
+ * But, there is some restriction due to protected access. 
+ * Oracle states "The protected modifier specifies that the member can only be accessed within its own package (as with package-private) and, in addition, by a subclass of its class in another package."
+ * protected member can be accessed by the subclass only. 
+ * Here, I would like to add one more point : protected members can be accessed by the subclass and in the same subclass only. 
+ * There, could be the case that we try to access the protected member through the subclass object but in another subclass then compiler
+ * will say vision problem: "The method clone() from the type Object is not visible"
+ * Although every class is extending Object class by default but, protected members can only be accessed by the subclass in the same subclass
+ * To solve this problem, you must override the protected method in the subclass and raise the vision from protected to public 
+ *
+ */
+ package learn.cloning;
+class Test1{
+	int x,y;
+	public Test1(){
+		x=10;
+		y=20;
+	}
+}
+class Test2{
+	int a;
+	int b;
+	Test2(){
+		a=30;
+		b=40;
+	}
+	
+	Test1 test1Obj = new Test1();
+}
+public class CloningInJava implements Cloneable{
+	public static void main(String[] args){
+		System.out.println("Default values- ");
+		Test2 test2 = new Test2();
+		System.out.println("x= "+test2.test1Obj.x);
+		System.out.println("y= "+test2.test1Obj.y);
+		System.out.println("a= "+test2.a);
+		System.out.println("b= "+test2.b);
+		// Below line gives error : "The method clone() from the type Object is not visible"
+    // This is because it is being called by a subclass of Object i.e. Test2 but this is not Test2 class.
+    // This is CloningInJava class. 
+    // Here, protected member is accessed by a subclass object in another subclass, which is not possible for protected member
+		Test2 test2ClonedObj = (Test2) test2.clone();
+		//System.out.println("x= "+test2ClonedObj.test1Obj.x);
+		//System.out.println("y= "+test2ClonedObj.test1Obj.y);
+		System.out.println("a= "+test2ClonedObj.a);
+		System.out.println("b= "+test2ClonedObj.b);
+		
+		
+	}
+}
+
+/*********************************************************** Concept 2 *****************
+ * clone() is not enough to clone the object. Cloning behaviour is only added if class calling implments Cloneable interface 
+ * otherwise, it gives runtime exception CloneNotSupportedException
+ * Here, comes the use of Cloneable interface                                                            6+
+ */
+ package learn.cloning;
+// Here, SimpleReference is not implementing Cloneable, It throw CloneNotSupportedException. And, since the object is not created
+// using clone(), So, if we try to access any member using that cloned object it will give NullPointerException
+public class SimpleReference {
+	int x;
+	int y;
+	SimpleReference(){
+		x=20;
+		y=10;
+		System.out.println("Inside Constructor: x= " +x);
+		System.out.println("Inside Constructor: y= " +y);
+	}
+	public static void main(String[] args){
+		SimpleReference sr= new SimpleReference();
+				/*
+		 * Compile time error
+		sr.SimpleReference();*/
+		SimpleReference sr1 = null;
+		try {
+			sr1 = (SimpleReference) sr.clone();
+		} catch (CloneNotSupportedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		sr.x=30;
+		System.out.println("x= " +sr.x);
+		System.out.println("y= " +sr.y);
+		System.out.println("Value of Referenced Object x= " +sr1.x);
+		System.out.println("Value of Referenced Object y= " +sr1.y);
+		
+	}
+}
+
+// Another Example of above concept
+// Here, Cloneable is not implemented by the class calling it, so it will throw CloneNotSupportedException
+// Here, note that clone() is overridden in Test2 class and its access is changed from protected to public 
+// So, now Test2 can access clone() in any other class through its object
+
+package learn.cloning;
+
+
+class Test1{
+	int x,y;
+	public Test1(){
+		x=10;
+		y=20;
+	}
+}
+class Test2{
+	int a;
+	int b;
+	Test2(){
+		a=30;
+		b=40;
+	}
+	public Object clone(){
+		try {
+			return super.clone();
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	Test1 test1Obj = new Test1();
+}
+public class CloningInJava implements Cloneable{
+	public static void main(String[] args){
+		System.out.println("Default values- ");
+		Test2 test2 = new Test2();
+		System.out.println("x= "+test2.test1Obj.x);
+		System.out.println("y= "+test2.test1Obj.y);
+		System.out.println("a= "+test2.a);
+		System.out.println("b= "+test2.b);
+		// Below line gives error : "The method clone() from the type Object is not visible"
+		Test2 test2ClonedObj = (Test2) test2.clone();
+		//System.out.println("x= "+test2ClonedObj.test1Obj.x);
+		//System.out.println("y= "+test2ClonedObj.test1Obj.y);
+		System.out.println("a= "+test2ClonedObj.a);
+		System.out.println("b= "+test2ClonedObj.b);
+		
+		
+	}
+}
+
+// Above code will throw NullPointerException becuase test2ClonedObj is null as Test2 is not implementing Cloneable
+// Correct Code: 
+package learn.cloning;
+
+
+class Test1{
+	int x,y;
+	public Test1(){
+		x=10;
+		y=20;
+	}
+}
+class Test2 implements Cloneable{
+	int a;
+	int b;
+	Test2(){
+		a=30;
+		b=40;
+	}
+	public Object clone(){
+		try {
+			return super.clone();
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	Test1 test1Obj = new Test1();
+}
+public class CloningInJava implements Cloneable{
+	public static void main(String[] args){
+		System.out.println("Default values- ");
+		Test2 test2 = new Test2();
+		System.out.println("x= "+test2.test1Obj.x);
+		System.out.println("y= "+test2.test1Obj.y);
+		System.out.println("a= "+test2.a);
+		System.out.println("b= "+test2.b);
+		// Below line gives error : "The method clone() from the type Object is not visible"
+		Test2 test2ClonedObj = (Test2) test2.clone();
+		System.out.println("x= "+test2ClonedObj.test1Obj.x);
+		System.out.println("y= "+test2ClonedObj.test1Obj.y);
+		System.out.println("a= "+test2ClonedObj.a);
+		System.out.println("b= "+test2ClonedObj.b);
+		
+		
+	}
+}
+
+/******************************************** Concept 3
+ * Shallow Cloning and Deep Cloning in java
+ *
+ */
+ /********************* Shallow cloning **************8
+  * Shallow cloning means object used as data member in class is not created separately while creating the cloned object
+  * If any object used as data member in a class and its value is modified in cloned object then the value will also get modifed in
+  * original object as this is shallow cloning
+  * Note: This is the case for referenced object only, not for primitive values. Also, note that String object acts as primitive type
+  * here. It's object need not separately for deep cloning.
+  */
+package learn.cloning;
+
+
+class Test1{
+	int x,y;
+	String strInTest1;
+	public Test1(){
+		x=10;
+		y=20;
+		strInTest1="String value in Test1";
+	}
+}
+class Test2 implements Cloneable{
+	int a;
+	int b;
+	String strInTest2;
+	Test2(){
+		a=30;
+		b=40;
+		strInTest2= "String value in Test2";
+	}
+	public Object clone(){
+		try {
+			return super.clone();
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	Test1 test1Obj = new Test1();
+}
+public class CloningInJava implements Cloneable{
+	public static void main(String[] args){
+		System.out.println("Default values- ");
+		Test2 test2 = new Test2();
+		System.out.println("x= "+test2.test1Obj.x);
+		System.out.println("y= "+test2.test1Obj.y);
+		System.out.println("String in Test1= "+test2.test1Obj.strInTest1);
+		System.out.println("a= "+test2.a);
+		System.out.println("b= "+test2.b);
+		System.out.println("String in Test2= "+test2.strInTest2);
+		// Below line gives error : "The method clone() from the type Object is not visible if Cloneable is not implemented"
+		// Here, Test1 is used as data member in Test2. 
+		// And, Test1 object is not created separately while cloning Test2, so this is Shallow Cloning
+		// If we modify the value of Test1 object using cloned object of Test2, then value of Test1 object will also get modified
+		// in original Test2  object
+		Test2 test2ClonedObj = (Test2) test2.clone();
+		System.out.println("Cloned object values");
+		System.out.println("x= "+test2ClonedObj.test1Obj.x);
+		System.out.println("y= "+test2ClonedObj.test1Obj.y);
+		System.out.println("String in Test1= "+test2ClonedObj.test1Obj.strInTest1);
+		System.out.println("a= "+test2ClonedObj.a);
+		System.out.println("b= "+test2ClonedObj.b);
+		System.out.println("String in Test2= "+test2ClonedObj.strInTest2);
+		// Change the value of object used as data member using cloned object  and change the value of one prmitive type
+		System.out.println("Changing the value of ojbect used as data member using cloned object");
+		test2ClonedObj.test1Obj.x=100;
+		test2ClonedObj.test1Obj.strInTest1 = "Modifed value of Test1 str object using cloned object of Test2";
+		test2ClonedObj.a=300;
+		test2ClonedObj.strInTest2="Modified value of Test2 by cloned object of Test2";
+		System.out.println("Default values- after changing the data of object of object using cloned object of Test2");
+		System.out.println("x= "+test2.test1Obj.x);
+		System.out.println("y= "+test2.test1Obj.y);
+		System.out.println("String in Test1= "+test2.test1Obj.strInTest1);
+		System.out.println("a= "+test2.a);
+		System.out.println("b= "+test2.b);
+		System.out.println("String in Test2= "+test2.strInTest2);
+		System.out.println("Cloned object values- after changing the data of object of object using cloned object");
+		System.out.println("x= "+test2ClonedObj.test1Obj.x);
+		System.out.println("y= "+test2ClonedObj.test1Obj.y);
+		System.out.println("String in Test1= "+test2ClonedObj.test1Obj.strInTest1);
+		System.out.println("a= "+test2ClonedObj.a);
+		System.out.println("b= "+test2ClonedObj.b);
+		System.out.println("String in Test2= "+test2ClonedObj.strInTest2);
+		System.out.println("Point to be noted here that: if we changed the value of test2ClonedObj.test1Obj.x, then value of "
+				+ "\ntest2.test1Obj.x  is also changed. This is because test1Obj is just the reference pointing to the object created in Test2 initial object"
+				+ "\nIn its cloned object, Test1 object is not created separately."
+				+ "\nThis is called Shallow cloning.");
+		
+		
+	}
+}
+
+Output:
+Default values- 
+x= 10
+y= 20
+String in Test1= String value in Test1
+a= 30
+b= 40
+String in Test2= String value in Test2
+Cloned object values
+x= 10
+y= 20
+String in Test1= String value in Test1
+a= 30
+b= 40
+String in Test2= String value in Test2
+Changing the value of ojbect used as data member using cloned object
+Default values- after changing the data of object of object using cloned object of Test2
+x= 100
+y= 20
+String in Test1= Modifed value of Test1 str object using cloned object of Test2
+a= 30
+b= 40
+String in Test2= String value in Test2
+Cloned object values- after changing the data of object of object using cloned object
+x= 100
+y= 20
+String in Test1= Modifed value of Test1 str object using cloned object of Test2
+a= 300
+b= 40
+String in Test2= Modified value of Test2 by cloned object of Test2
+Point to be noted here that: if we changed the value of test2ClonedObj.test1Obj.x, then value of 
+test2.test1Obj.x  is also changed. This is because test1Obj is just the reference pointing to the object created in Test2 initial object
+In its cloned object, Test1 object is not created separately.
+This is called Shallow cloning.
+
+
+
+
+
+ /********************* Deep cloning **************8
+  * 
+  * In the deep cloning, we create the object of the class needs to be cloned in the clone method
+  * Also, using that created object, we create the new instance of the referenced object. 
+  * Clone method in Test2
+  public Object clone(){
+		try {
+			Test2 test2 = (Test2)super.clone();
+      // Test1 object is created separately
+			test2.test1Obj = new Test1();
+			return test2;
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+  */
+  // Full Code
+  package learn.cloning;
+
+
+class Test1{
+	int x,y;
+	String strInTest1;
+	public Test1(){
+		x=10;
+		y=20;
+		strInTest1="String value in Test1";
+	}
+}
+class Test2 implements Cloneable{
+	int a;
+	int b;
+	String strInTest2;
+	Test2(){
+		a=30;
+		b=40;
+		strInTest2= "String value in Test2";
+	}
+	public Object clone(){
+		try {
+			Test2 test2 = (Test2)super.clone();
+			test2.test1Obj = new Test1();
+			return test2;
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	Test1 test1Obj = new Test1();
+}
+public class CloningInJava implements Cloneable{
+	public static void main(String[] args){
+		System.out.println("Default values- ");
+		Test2 test2 = new Test2();
+		System.out.println("x= "+test2.test1Obj.x);
+		System.out.println("y= "+test2.test1Obj.y);
+		System.out.println("String in Test1= "+test2.test1Obj.strInTest1);
+		System.out.println("a= "+test2.a);
+		System.out.println("b= "+test2.b);
+		System.out.println("String in Test2= "+test2.strInTest2);
+		// Below line gives error : "The method clone() from the type Object is not visible if Cloneable is not implemented"
+		// Here, Test1 is used as data member in Test2. 
+		// And, Test1 object is not created separately while cloning Test2, so this is Shallow Cloning
+		// If we modify the value of Test1 object using cloned object of Test2, then value of Test1 object will also get modified
+		// in original Test2  object
+		Test2 test2ClonedObj = (Test2) test2.clone();
+		System.out.println("Cloned object values");
+		System.out.println("x= "+test2ClonedObj.test1Obj.x);
+		System.out.println("y= "+test2ClonedObj.test1Obj.y);
+		System.out.println("String in Test1= "+test2ClonedObj.test1Obj.strInTest1);
+		System.out.println("a= "+test2ClonedObj.a);
+		System.out.println("b= "+test2ClonedObj.b);
+		System.out.println("String in Test2= "+test2ClonedObj.strInTest2);
+		// Change the value of object used as data member using cloned object  and change the value of one prmitive type
+		System.out.println("Changing the value of ojbect used as data member using cloned object");
+		test2ClonedObj.test1Obj.x=100;
+		test2ClonedObj.test1Obj.strInTest1 = "Modifed value of Test1 str object using cloned object of Test2";
+		test2ClonedObj.a=300;
+		test2ClonedObj.strInTest2="Modified value of Test2 by cloned object of Test2";
+		System.out.println("Default values- after changing the data of object of object using cloned object of Test2");
+		System.out.println("x= "+test2.test1Obj.x);
+		System.out.println("y= "+test2.test1Obj.y);
+		System.out.println("String in Test1= "+test2.test1Obj.strInTest1);
+		System.out.println("a= "+test2.a);
+		System.out.println("b= "+test2.b);
+		System.out.println("String in Test2= "+test2.strInTest2);
+		System.out.println("Cloned object values- after changing the data of object of object using cloned object");
+		System.out.println("x= "+test2ClonedObj.test1Obj.x);
+		System.out.println("y= "+test2ClonedObj.test1Obj.y);
+		System.out.println("String in Test1= "+test2ClonedObj.test1Obj.strInTest1);
+		System.out.println("a= "+test2ClonedObj.a);
+		System.out.println("b= "+test2ClonedObj.b);
+		System.out.println("String in Test2= "+test2ClonedObj.strInTest2);
+		System.out.println("Point to be noted here that: if we changed the value of test2ClonedObj.test1Obj.x, then value of "
+				+ "\ntest2.test1Obj.x  is also changed. This is because test1Obj is just the reference pointing to the object created in Test2 initial object"
+				+ "\nIn its cloned object, Test1 object is not created separately."
+				+ "\nThis is called Shallow cloning.");
+		
+		
+	}
+}
+Output: 
+Default values- 
+x= 10
+y= 20
+String in Test1= String value in Test1
+a= 30
+b= 40
+String in Test2= String value in Test2
+Cloned object values
+x= 10
+y= 20
+String in Test1= String value in Test1
+a= 30
+b= 40
+String in Test2= String value in Test2
+Changing the value of ojbect used as data member using cloned object
+Default values- after changing the data of object of object using cloned object of Test2
+x= 10
+y= 20
+String in Test1= String value in Test1
+a= 30
+b= 40
+String in Test2= String value in Test2
+Cloned object values- after changing the data of object of object using cloned object
+x= 100
+y= 20
+String in Test1= Modifed value of Test1 str object using cloned object of Test2
+a= 300
+b= 40
+String in Test2= Modified value of Test2 by cloned object of Test2
+Point to be noted here that: if we changed the value of test2ClonedObj.test1Obj.x, then value of 
+test2.test1Obj.x  is also changed. This is because test1Obj is just the reference pointing to the object created in Test2 initial object
+In its cloned object, Test1 object is not created separately.
+This is called Shallow cloning.
+

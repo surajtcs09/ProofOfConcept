@@ -1,0 +1,77 @@
+Concep1------------------------------------------------------------------------------
+Properties class is present java.util package. 
+
+java.util.Properties extends java.util.Hashtable<Object, Object>
+java.util.Properties.class contains one setter methods
+  > setProperty()
+    Code:
+       public synchronized Object setProperty(String key, String value) {
+        return put(key, value);
+        }
+        
+ This class is thread-safe: multiple threads can share a single Properties object without the need for external synchronization.
+ 
+ As we can see, there is only one setter method which is synchronized. So, even if multiple thread tries to access it, it behaves same. 
+ 
+ Concep2------------------------------------------------------------------------------
+ 
+  Writing values in the ****.properties file and accessing it. 
+ 
+ There are different ways to access it. 
+ Read the properties file or @Value("${keyname}") in spring 
+ 
+ Following points must be taken care while writing the key value in .properties file.
+ => '=',':' and white space acts as separator of key value. 
+    Whenever we want to use this other than separator, then we must escape it with Java escape sequence character '\'
+    This is meant for .properties file only. 
+    If one use \= inside java code then it is not supported. 
+    
+    Valid escape sequence in java are \b, \t, \n, \f, \r, \", \', \\
+    
+    Usages: 
+    Case 1: name=Suraj Kumar  ---- Wrong
+        If we try to read the property with name, then we get value: Suraj 
+        @Value("${name}")
+        String name; 
+        Output : Suraj 
+      
+        Correct One is
+              name=Suraj\ Kumar   #Here, \ escapes the space, And it is not used as separator
+      
+       Note: # is used for writing comments in .properties file
+       
+    Case 2: url=https://www.google.co.in/search?q=properties  ---- Wrong
+        In above case, what we want is key=url and value=https://www.google.co.in/search?q=properties
+        But, the value contains two separators- : (after https) and = (after q)
+        We need to escape these two values using the escape sequence character '\'
+        
+        Correct one is
+              url=https\://www.google.co.in/search?q\=properties
+              
+    Case 3: filePath=C:\Users\Public    --- Wrong
+        \ is escape character and it has not been used with '=',':' or blank space 
+        @Value("{$filePath}");
+        String filePath;
+                Output: filePath = C:UsersPublic
+        Correct One:  C:\\Users\\Public       or  C:/Users/Public
+        
+
+=> When properties file is read, both key and value are always rendered as String
+if we use    port=8080
+then, 
+@Value("{$port}")
+String port
+
+We need to conver it into int to use it as int value. 
+
+
+Concep3-----------------------------------------------------------------------------
+
+In Spring, @Value cannot be used to initialize the vlaue of static variable
+@Value("${url}")
+static String url;   ----- Wrong
+
+One will always get null value in the url as static variable memory allocation and the initialization takes place much before the 
+Spring life cycle. 
+So, it will not contain any value
+        

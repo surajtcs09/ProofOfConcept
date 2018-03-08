@@ -1,0 +1,73 @@
+Facts through experience
+
+1. If we made an bean object as singleton and this object is created and initialized with some values received from properties file
+then if we change the value of one variable dynamically through code then the value will not change. This is because you have declared
+the object as singleton. 
+
+So, don't make the class as singleton if its vlaue changes dynamically. Because, once the server start it will go on with the first value
+even if the value changed through code. 
+
+Example: Suppose, we are appending an url with start and end time and then we are calling the url. 
+There may be other requirements to call this url which are present in properties file. 
+Like proxy site, proxy port, connection time out , socket timeout and the api. 
+We created an immutable object so that value cannot be change once the object is created. We cannnot make it singleton as the 
+api can change during time. 
+
+We cannot just pass these values to method as java does not recomment to pass more than three parameters. For one time just to set the 
+values in the bean object is fine.
+
+Also, it may be the case that static method present in a final class is used to call the API, then we can't get the values from .properties 
+file in a static variable. 
+
+As static variable initialization takes place at the time of class loading much before @Value("${variableName}") get executed.
+
+*****************************************************************************************************************
+*****************************************************************************************************************
+*****************************************************************************************************************
+*****************************************************************************************************************
+2. Download and install the certificate in jvm 
+
+To make an https call through the application we need to install the certificate to jvm where the tomcat server is present. 
+This certificate has some validity time also. 
+Add HTTPS certificate to JVM
+__________________________________________________________________________________________
+Contents
+1.	Download the certificate file (if you can open it through the browser).	1
+2.	Run command to install the certificate	2
+
+When we try to access the HTTPS URL through our application, we get stuck with following issue if the desired certificate is not installed in our JVM. 
+“javax.net.ssl.SSLHandshakeException: sun.security.validator.ValidatorException: PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target”
+
+Certificates are installed in following path: C:\java\jdk1.8.0_102\jre\lib\security\cacerts
+
+If this is the case then we need to follow following steps to install the certificate.
+1.	Download the certificate file (if you can open it through the browser).
+1.1	Go to browser and hit the URL
+1.2	Click on Secure -> Certificate -> Valid
+ 
+
+1.3	Go to Details tab and click on “Copy to File”
+ 
+
+1.4	Click on Next -> Next -> browse to path you want to store and provide the file name. 
+1.5	Click on Finish button without making any change. 
+You got your ****.cer certificate file. 
+e.g. C:\xyz\yx.cer
+
+2.	Run command to install the certificate
+2.1	Open command prompt and navigate to bin folder of jdk or jre as both contains keytool.exe
+2.2	Run the following command
+keytool –import –alias <name-for-the-certificate> -keystore <%JAVA_HOME%\jre\lib\security\cacerts> -file <path-of-the-certificate-file>
+
+keytool -import -alias datacapable -keystore "C:\Program Files\Java\jre1.8.0_71\lib\security\cacerts" -file C:\xyz\yx.cer
+
+Password required to run this command: changeit
+ 
+Note: Enclose the path in inverted comma if it path name contains space. 
+
+*****************************************************************************************************************
+*****************************************************************************************************************
+*****************************************************************************************************************
+*****************************************************************************************************************
+
+3.

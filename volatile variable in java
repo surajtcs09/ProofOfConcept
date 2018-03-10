@@ -1,0 +1,57 @@
+Source: 
+Link1: http://www.baeldung.com/java-volatile
+Link2: http://javarevisited.blogspot.in/2011/06/volatile-keyword-java-example-tutorial.html
+Link3: https://www.geeksforgeeks.org/volatile-keyword-in-java/
+Link4: https://en.wikipedia.org/wiki/CPU_cache#Write_policies
+Link5: https://www.javatpoint.com/synchronization-in-java
+Link6: http://tutorials.jenkov.com/java-concurrency/synchronized.html
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+=========================================================================================
+
+For all multithreaded applications, we need to ensure a couple of rules for a consistent behaviour
+> Mutual Exclusion - Only one thread executes a critical section at a time
+> Visibility - changes made by one thread to the shared data, are visible to other threads 
+to maintain a data consistency. 
+
+Synchronized methods and blocks provide both of the above properties at the cost of performance
+of the application. 
+
+volatile keyword ensures the visibility aspect of the data change. It does not
+provide mutual exclusion. 
+
+"Synchronization is built around an internal entity known as the lock or monitor.
+Every object has an lock associated with it. By convention, a thread that needs consistent access 
+to an object's fields has to acquire the object's lock before accessing them, and then release the lock when it's done with them."
+
+However, to increase the performance we can use volatile and synchronized blocks together for 
+consistent behaviour. 
+
+I will discuss above feature with examples but first let's list down it's features.
+Features of volatile keyword: 
+1. It can only be used with variables. 
+2. It ensures visibility aspect. Threads using the volatile variable does not cache value of 
+this variable and always read it from main memory. 
+
+What is cache?
+Threads first write the data to cache and then write to main memory after eviction from cache.
+
+Quote from Link4
+"If data is written to the cache, at some point it must also be written to main memory; 
+the timing of this write is known as the write policy. In a write-through cache, 
+every write to the cache causes a write to main memory. 
+Alternatively, in a write-back or copy-back cache, writes are not immediately mirrored to the main memory, 
+and the cache instead tracks which locations have been written over, marking them as dirty. 
+The data in these locations is written back to the main memory only when that data is evicted from the cache. "
+
+3. Volatile variable maintains ordering J2EE1.5 onwards. If we perform read and write operation at the same time.
+Write operation will be performed first. Remember, volatile variable does not show consistency behaviour if 
+two write operation are performed at the same time. 
+"after Java 5 write to any volatile variable happens before any read into the volatile variable.
+Read more: http://javarevisited.blogspot.com/2011/06/volatile-keyword-java-example-tutorial.html#ixzz59KhjNKey"
+
+
+Examples in Java: 
+Example1 >>
+
+

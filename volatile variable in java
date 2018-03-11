@@ -5,6 +5,8 @@ Link3: https://www.geeksforgeeks.org/volatile-keyword-in-java/
 Link4: https://en.wikipedia.org/wiki/CPU_cache#Write_policies
 Link5: https://www.javatpoint.com/synchronization-in-java
 Link6: http://tutorials.jenkov.com/java-concurrency/synchronized.html
+Link7: http://javarevisited.blogspot.in/2011/06/volatile-keyword-java-example-tutorial.html
+
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 =========================================================================================
@@ -18,7 +20,7 @@ Synchronized methods and blocks provide both of the above properties at the cost
 of the application. 
 
 volatile keyword ensures the visibility aspect of the data change. It does not
-provide mutual exclusion. 
+provide mutual exclusion. After java5, java ensure the write operation must be prior to read operation.
 
 "Synchronization is built around an internal entity known as the lock or monitor.
 Every object has an lock associated with it. By convention, a thread that needs consistent access 
@@ -52,6 +54,206 @@ Read more: http://javarevisited.blogspot.com/2011/06/volatile-keyword-java-examp
 
 
 Examples in Java: 
-Example1 >>
+Example1 >> Using synchronized method
+package volatileuse;
+
+
+public class SingletonCreationUsingSynchronizedMethod {
+	private volatile static SingletonCreationUsingSynchronizedMethod instance;
+
+	private SingletonCreationUsingSynchronizedMethod() {
+		System.out.println("SingletonCreationUsingSynchronizedMethod constructor called.");
+	}
+
+	public static synchronized SingletonCreationUsingSynchronizedMethod getInstance(String threadName){
+		if(instance==null){
+				if(instance==null){
+			instance=  new SingletonCreationUsingSynchronizedMethod();
+			System.out.println(threadName+" created new instance of this singleton class.");
+			}
+		}
+		return instance;
+	}
+}
+
+
+//Synchronized method concurrency test
+package volatileuse;
+
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+public class SingletonCreationUsinngSynchronizedMethodConcurrencyTest {
+	public static void main(String[] args) {
+		long startTime = System.currentTimeMillis();
+		final CountDownLatch latch = new CountDownLatch(2);
+		ExecutorService executors = Executors.newCachedThreadPool();
+		executors.execute(new Runnable() {
+			@Override
+			public void run() {
+				
+				for(long i=1;i<999_999_999;i++){
+					//System.out.println("First Executor Thread count: "+i);
+				SingletonCreationUsingSynchronizedMethod scuv = SingletonCreationUsingSynchronizedMethod
+						.getInstance(Thread.currentThread().getName());
+			}
+				latch.countDown();
+			}
+		});
+		executors.execute(new Runnable() {
+
+			@Override
+			public void run() {
+				
+				for(long i=1;i<999_999_999;i++){
+					//System.out.println("Second Executor thread count "+i);
+				SingletonCreationUsingSynchronizedMethod scuv = SingletonCreationUsingSynchronizedMethod
+						.getInstance(Thread.currentThread().getName());
+			}
+				latch.countDown();
+			}
+		});
+		executors.execute(new Runnable() {
+
+			@Override
+			public void run() {
+				//System.out.println("Third thread run.");
+				SingletonCreationUsingSynchronizedMethod scuv = SingletonCreationUsingSynchronizedMethod
+						.getInstance(Thread.currentThread().getName());
+			}
+		});
+		executors.execute(new Runnable() {
+
+			@Override
+			public void run() {
+				//System.out.println("Fourth thread run.");
+				SingletonCreationUsingSynchronizedMethod scuv = SingletonCreationUsingSynchronizedMethod
+						.getInstance(Thread.currentThread().getName());
+			}
+		});
+		
+		executors.shutdown();
+		//long duration = System.nanoTime()-startTime;
+			try {
+				latch.await();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+				long duration = System.currentTimeMillis()-startTime;
+				System.out.println(duration+" milliseconds");
+	}
+}
+
+Notes: Using synchronized method creates a singleton class but everytime that method is called, lock is applied on the class which
+reduces the performance.
+Using synchronized method Time taken to run the program: 99383 milliseconds which is 90 time more than that of using synchronized block
+and double checked locking
+
+package volatileuse;
+
+public class SingletonCreationUsingVolatile {
+	private volatile static SingletonCreationUsingVolatile instance;
+
+	private SingletonCreationUsingVolatile() {
+		System.out.println("SingletonCreationUsingVolatile constructor called.");
+	}
+
+	public static SingletonCreationUsingVolatile getInstance(String threadName){
+		if(instance==null){
+			// Using synchronized block improves the performance drastically (by 90 times) because this class acquires
+			// lock only once or twice. In synchronized method the lock is acquired by each call 
+			synchronized (SingletonCreationUsingVolatile.class) {
+				if(instance==null){
+			instance=  new SingletonCreationUsingVolatile();
+			System.out.println(threadName+" created new instance of this singleton class.");
+				}
+			}
+		}
+		return instance;
+	}
+}
+
+
+// concurrency test
+package volatileuse;
+
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+public class SingletonWithVolatileConcurrencyTest {
+	public static void main(String[] args) {
+		long startTime= System.currentTimeMillis();
+		CountDownLatch latch = new CountDownLatch(2);
+		ExecutorService executors = Executors.newCachedThreadPool();
+		executors.execute(new Runnable() {
+			@Override
+			public void run() {
+				for(long i=1;i<999_999_999;i++){
+					//System.out.println("First Executor Thread count: "+i);
+				SingletonCreationUsingVolatile scuv = SingletonCreationUsingVolatile
+						.getInstance(Thread.currentThread().getName());
+			}
+				latch.countDown();
+			}
+		});
+		executors.execute(new Runnable() {
+
+			@Override
+			public void run() {
+				for(long i=1;i<999_999_999;i++){
+					//System.out.println("Second Executor Thread count: "+i);
+				SingletonCreationUsingVolatile scuv = SingletonCreationUsingVolatile
+						.getInstance(Thread.currentThread().getName());
+			}
+				latch.countDown();
+			}
+		});
+		executors.execute(new Runnable() {
+
+			@Override
+			public void run() {
+				//System.out.println("Third thread run.");
+				SingletonCreationUsingVolatile scuv = SingletonCreationUsingVolatile
+						.getInstance(Thread.currentThread().getName());
+			}
+		});
+		executors.execute(new Runnable() {
+
+			@Override
+			public void run() {
+				//System.out.println("Fourth thread run.");
+				SingletonCreationUsingVolatile scuv = SingletonCreationUsingVolatile
+						.getInstance(Thread.currentThread().getName());
+			}
+		});
+		
+		executors.shutdown();
+		//long duration = System.nanoTime()-startTime;
+		try {
+			latch.await();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+				long duration = System.currentTimeMillis()-startTime;
+				System.out.println(duration+" milliseconds");
+		
+	}
+}
+
+
+Using synchronized block, volatile variable and double checked locking: 1191 milliseconds
+
+
+________________________________________________________________________________________________________________________
+
+
+Question: Even if we do not use volatile variable in above case then also it is working fine.
+That is using double checked locking and synchronized block, it is working fine. Test if further and try to find a 
+better way to test the use of volatile variable. 
+
 
 

@@ -1,0 +1,10 @@
+1. BlockingQueue is thread safe to take instances from and put into. 
+put() and take() supports this behaviour. 
+put() waits to insert a new element to the queue if the queue is full. 
+take() waits to retrieve and remove the elemnt if the queue is empty.
+
+
+
+
+References: 
+http://tutorials.jenkov.com/java-util-concurrent/blockingqueue.html

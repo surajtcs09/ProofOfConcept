@@ -1,0 +1,58 @@
+1. Start the thread from constructor
+Generally, we start the thread with <thread-object>.start();
+We can write the start() inside the constructor extending Thread. 
+Then, when the object method is created, run() is called. 
+
+package org.learn.multithreading;
+
+public class Starter extends Thread{
+	private int x=2;
+	public static void main(String[] args) throws InterruptedException {
+		new Starter().makeItSo();	
+	}
+	Starter(){
+		x=5;
+		start();
+	}
+	private void makeItSo() throws InterruptedException {
+		//join();
+		x=x-1;
+		System.out.println(x);
+	}
+	public void run(){
+		x*=2;
+	}
+
+}
+
+
+2. Synchronization works only if the Class containing the synchronized method is created only once and passed to multiple threads.
+It can be possible only if there is static reference to the object or the object has been created only once.
+
+package org.learn.multithreading;
+
+
+class PingPong{
+	synchronized void hit(long n){
+		for(int i=1;i<3;i++){
+			System.out.println(n+"-"+i);
+		}
+	}
+}
+public class Tester implements Runnable{
+	static PingPong pp2 = new PingPong();
+	public static void main(String[] args) {
+		new Thread(new Tester()).start();
+		new Thread(new Tester()).start();
+	}
+
+	@Override
+	public void run() {
+		pp2.hit(Thread.currentThread().getId());
+	}
+
+}
+
+
+If the static reference is removed from PingPong, then synchronization effect to hit() is lost as
+everytime a thread is executed, new instance of PingPong is created and hit() has new memory reference. 

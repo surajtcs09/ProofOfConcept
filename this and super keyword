@@ -1,0 +1,4 @@
+1. this keyword is only for current class object. If the variable is defined in parent class, then same variable cannot be accessed
+in child class using this keyword. 
+
+2. 

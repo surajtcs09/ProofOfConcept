@@ -1,0 +1,43 @@
+1. Method Overriding
+
+Overriding method's return type in the subclass may be the subclass of overridden method's return type in the super class but not 
+the superclass of the same. 
+
+
+interface A{
+	public void doSomething(String thing); 
+}
+
+class AImpl implements A{
+	public void doSomething(String msg){
+		
+	}
+}
+class B{
+	public A doIt(){
+		return null;		
+	}
+	public String execute(){
+		return null;
+		
+	}	
+}
+
+class C extends B{
+	public AImpl doIt(){
+		return null;
+	}
+	public Object execute(){
+		return null;
+	}
+}
+
+In above code, line "public Object execute(){" will give error "The return type is incompatible with B.execute()".
+
+But, line "public AImpl doIt(){" does not give error because AImpl is the subclass A. And the return type of overridden method doIt()
+in super class B is A which is the super interface of AImpl. 
+
+
+2. While overriding a method, remember that we cannot reduce the visibility of a method. 
+In parent class, if the visibilty of the method is protected, then we cannot change visibility in inherited method to private. 
+

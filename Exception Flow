@@ -33,3 +33,70 @@ public class Thread2 implements Runnable {
 In above program, exception occurred in child thread which includes run(). 
 Even if the exception occurred in child method, main thread is not interrupted, then 
 this program will surely print "End of method".
+
+
+2. difference between using throws keyword and try-catch block
+If the super class method does not throws any exception in the signature, then in it's subclass implementation, 
+we cannot use throws keyword with that method to handle checked exception. 
+By default, RuntimeException could only be handled using throws keyword. 
+
+For Example: if use run() of Runnable to throw InterruptedException, then it give compiler error
+"Exception Exception is not compatible with throws clause in Runnable.run()"
+
+
+/*
+ * Following class include concepts: 
+ * 1. Anonymous class declaration and instantiation at the same time using new key word with interface. 
+ * 2. Example of getting java.util.ConcurrentModificationException
+ * 3. throws keyword does not handle the exception if raised inside field declaration and instantiation
+ */
+
+import java.util.ArrayList;
+import java.util.List;
+
+
+public class ConcurrentExecutionException {
+	private static List<String> list;
+	
+		
+	public static void main(String[] args) throws InterruptedException{
+		Runnable task = new Runnable(){
+			public void run() throws RuntimeException{
+					// below line explicitly need to be handled using try-catch. throws keyword does not work here
+					// Here, InterruptedException cannot be thrown in run method because InterruptedException is type of Exception rather than RuntimeException
+					// So, it must be handled using try-catch block, only
+					/*// If the code throws RuntimeException, then 
+				we can write 
+				public void run() throws NullPointerException{...}*/
+				int num=12/0;
+						try {
+							Thread.sleep(3000);
+							list.add("D");
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+								
+				addList();
+			}
+		};
+		list = new ArrayList<>();
+		list.add("A");
+		list.add("B");
+		list.add("C");
+		Thread thread = new Thread(task);
+		thread.start();
+		for(String s: list){			
+				Thread.sleep(2000);			
+			System.out.println(s);
+		}
+	}
+	public static void addList(){
+		list.add("D");
+	}
+}
+
+Here, Thread.sleep(3000); inside run() cannot be handled using throws keyword with run(). 
+
+
+

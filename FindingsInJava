@@ -1,0 +1,33 @@
+1. Mulpile classes can be written in a single file with the class containing execution starter method(i.e.) as public. 
+But, a class cannot be mixed with another type such as enum. It means a class with public specififer must be defined in its own file.
+
+Following program will give compile time error stating "The public type RainbowTest must be defined in its own file"
+
+package learn.enumurations;
+
+enum Rainbow {
+	RED("Red",0xff0000), GREEN("Green",0x00ff00), BLUE("Blue", 0x0000ff);
+	private String color;
+	private int hexCode;
+	Rainbow(String color, int hexCode){
+		this.color = color;
+		this.hexCode = hexCode;
+	}
+	public static Rainbow get(String inputColor){
+		for(Rainbow ewmp: values()){
+			if(inputColor.equalsIgnoreCase(ewmp.color)){
+				return ewmp;
+			}			
+		}
+		return null;
+	}
+}
+
+public class RainbowTest{
+	public static void main(String[] args){
+		
+	}
+}
+
+
+2. 

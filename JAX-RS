@@ -1,0 +1,16 @@
+JAX-RS is the Java specification for REST web services provided under JSR-311. 
+
+Basically, it provides annotations for different functionalities. 
+Following 11 annotations provided under JAX_RS. 
+@PATH
+@HEAD
+@GET
+@POST
+@PUT
+@DELETE
+@PRODUCES
+@CONSUMES
+@PATHPARAM
+@QUERYPARAM
+@PROVIDER
+

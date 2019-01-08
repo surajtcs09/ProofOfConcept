@@ -14,3 +14,7 @@ Following 11 annotations provided under JAX_RS.
 @QUERYPARAM
 @PROVIDER
 
+JAX-RS exception handling with Jersey2.0. 
+link: https://dennis-xlc.gitbooks.io/restful-java-with-jax-rs-2-0-en/cn/part1/chapter7/exception_handling.html
+
+Above link provides specific details about the HTTP status codes and explanation about the same. 

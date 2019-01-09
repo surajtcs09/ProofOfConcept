@@ -2,3 +2,10 @@
 
 Protocols means rules for communication. 
 If two devices want to communicate with each other, they need to follow some protocols. 
+
+HTTP is synchronous protocol. 
+
+ActiveMQ is asynchronous protocol. 
+
+Source for synchronous and asynchronous: http://www.programmr.com/blogs/difference-between-asynchronous-and-non-blocking
+

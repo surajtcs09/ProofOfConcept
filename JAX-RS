@@ -26,4 +26,9 @@ Status Code: 415 - Unsupported Media Type (NotSupportedException) ::
 Example: This occurs if the web service only consumes JSON file (@Consumes({MediaType.APPLICATION_JSON})).
 And the client is sending XML instead of JSON data. 
 
+-------------------------------
+Difference between @QueryParam and @MatrixParam
+https://www.concretepage.com/questions/470
+https://www.concretepage.com/webservices/resteasy-3/jax-rs-matrixparam-example-with-resteasy-3
+
 

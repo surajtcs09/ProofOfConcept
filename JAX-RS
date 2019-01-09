@@ -18,3 +18,12 @@ JAX-RS exception handling with Jersey2.0.
 link: https://dennis-xlc.gitbooks.io/restful-java-with-jax-rs-2-0-en/cn/part1/chapter7/exception_handling.html
 
 Above link provides specific details about the HTTP status codes and explanation about the same. 
+
+
+Exception thrown: 
+
+Status Code: 415 - Unsupported Media Type (NotSupportedException) ::
+Example: This occurs if the web service only consumes JSON file (@Consumes({MediaType.APPLICATION_JSON})).
+And the client is sending XML instead of JSON data. 
+
+

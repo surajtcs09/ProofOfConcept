@@ -56,3 +56,9 @@ public class Tester implements Runnable{
 
 If the static reference is removed from PingPong, then synchronization effect to hit() is lost as
 everytime a thread is executed, new instance of PingPong is created and hit() has new memory reference. 
+
+3. Diff bw process and thread
+Ans.  In process, context switch is more and in thread it is less.
+Context switch means time taken to jump the control from one process to another or one thread to another.
+
+

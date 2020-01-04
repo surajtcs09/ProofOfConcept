@@ -1,0 +1,12 @@
+1. Web container is a java based web application which provides runtime support required for web applications
+which are installed in a server application.
+
+2.Diff bw web server and application server
+A web server provides a web container which provides services of a web server
+to web applocation.
+An appplication server provides services to both web and ejb components.
+This provide suppotto both web application and enterprise application.
+
+3. Stateless means it doesnot allow ordoes not store a client information at server side.
+
+

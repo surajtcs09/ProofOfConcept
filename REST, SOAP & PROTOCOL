@@ -1,5 +1,19 @@
 1. REST is a architecture style but SOAP is a protocol. 
 
+If the protocol is not followed then service will not be created.
+Specific rules are like there must be endpoints , all exchanges should be in XML format.
+
+but, REST provides only guidelines to create the REST web service. Guidelines like it should be stateless, cachable etc.
+
+SOAP have its WSDL file which must be create in top down approach.
+Top down means first wsdl should be created and then java files should be created using wsimport or wsdltojava.
+wsdltojava is provided by apache cxf.
+
+REST has WADL file which does not require to create any java files from it as there is not any protocol followed for its creation.
+
+
+
+
 Protocols means rules for communication. 
 If two devices want to communicate with each other, they need to follow some protocols. 
 

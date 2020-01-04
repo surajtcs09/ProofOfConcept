@@ -9,4 +9,9 @@ This provide suppotto both web application and enterprise application.
 
 3. Stateless means it doesnot allow ordoes not store a client information at server side.
 
+4. When client request is sent to servlet in a server, servlet transfers the request to container. 
+Container immediately creates a pair of request and response objects and also a thread. 
+For each request it does the same.
+
+
 

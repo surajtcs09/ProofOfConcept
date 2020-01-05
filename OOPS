@@ -1,0 +1,10 @@
+1.Method Overriding --
+While overriding, low level access specifier can be replaced with high level access secifier or same.
+But, high level access specifier cannot be replaced with low level access specifier. 
+
+private is lowest level access specifier and public is highest level access specifier.
+
+method declared public can only be replaced
+
+
+There is no concept of inheritence for private methods. 

@@ -1,0 +1,10 @@
+1. To check which process is running of particular port
+In Windows: 
+netstat -aon | findstr<port_number>
+netstat -aon | findstr 8080
+
+It will give you the pid, find the application name using following command
+tasklist | findstr <PID>
+tasklist | findstr 4596
+
+

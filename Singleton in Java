@@ -375,3 +375,7 @@ public class Singleton implements Cloneable{
 	}
 	
 }
+
+========================================================================================================================
+
+To prevent the multiple instance creation during reflection, we need to use ENUM. 

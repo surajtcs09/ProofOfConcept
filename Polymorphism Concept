@@ -2,7 +2,7 @@
 
 Overriding method's return type in the subclass may be the subclass of overridden method's return type in the super class but not 
 the superclass of the same. 
-
+i.e. We cannot increase the return type of overridden method. 
 
 interface A{
 	public void doSomething(String thing); 
@@ -40,4 +40,88 @@ in super class B is A which is the super interface of AImpl.
 
 2. While overriding a method, remember that we cannot reduce the visibility of a method. 
 In parent class, if the visibilty of the method is protected, then we cannot change visibility in inherited method to private. 
+
+public class A 
+{
+	protected void display() {
+		System.out.println("A Display called");
+	}
+}
+
+public class B extends A
+{
+	
+	private	void display() {
+		System.out.println("B Display called");
+	}
+
+	public static void main(String[] args) {
+		B b = new B();
+		b.display();
+	}
+}
+
+Even if we do not write @Override, it will consider it as overridden method. 
+Here, we are changing the access modifier from protected to private. 
+It is not allowed by the compiler. 
+It will give compile time error: "attempting to assign weaker access privileges"
+
+We can increase the visibility of overridden method, however, we cannot decrease it. 
+It can be increased from protected to public. 
+
+@Override annotation is introduced in Java 1.5. It just make sure that method is overriden properly. 
+If we have used the @Override annotation and changed the argument list of overridden method, then it will 
+give compile time error. 
+If we have not used @Override annotation and changed the argument of the overridden method. 
+Then this will be counted as overloaded method. 
+
+
+
+3. Static methods cannot be overridden because static methods are not dispatched on the object instance at runtime. 
+In method overriding, which method to be executed is decided at runtime. This decision is made according to the object 
+that we called. 
+And, static methods are called based on class name that's why compiler restricts it to override static method. 
+It will give error: "Overridden method is static.". 
+
+public class A 
+{
+	protected static void display() {
+		System.out.println("A Display called");
+	}
+}
+
+public class B extends A
+{	
+	private	void display() {
+		System.out.println("B Display called");
+	}
+
+	public static void main(String[] args) {
+		B b = new B();
+		b.display();
+	}
+}
+
+4. Overriding method cannot be made as static. 
+If there is instance method in parent class, then overriding method in the sub class cannot be made as static. 
+
+public class A 
+{
+	public void display() {
+		System.out.println("A Display called");
+	}
+}
+
+public class B extends A
+{	
+	private static	void display() {
+		System.out.println("B Display called");
+	}
+
+	public static void main(String[] args) {
+		B b = new B();
+		b.display();
+	}
+}
+
 

@@ -2,7 +2,8 @@ I. Method Overriding
 
 1. Overriding method's return type in the subclass may be the subclass of overridden method's return type in the super class but not 
 the superclass of the same. 
-i.e. We cannot increase the return type of overridden method. 
+i.e. We cannot increase the return type of overridden method.
+i.e. Return type can't change except for covariants returns. 
 
 interface A{
 	public void doSomething(String thing); 
@@ -40,6 +41,7 @@ in super class B is A which is the super interface of AImpl.
 
 2. While overriding a method, remember that we cannot reduce the visibility of a method. 
 In parent class, if the visibilty of the method is protected, then we cannot change visibility in inherited method to private. 
+i.e. Access can be less restrictive. Must not make more restrictive. 
 
 public class A 
 {
@@ -83,6 +85,10 @@ that we called.
 And, static methods are called based on class name that's why compiler restricts it to override static method. 
 It will give error: "Overridden method is static.". 
 
+Object type (in other words, the type of the actual instance on the heap) determines which method is selected. 
+Happens at runtime. 
+
+
 public class A 
 {
 	protected static void display() {
@@ -114,7 +120,7 @@ public class A
 
 public class B extends A
 {	
-	private static	void display() {
+	public static	void display() {
 		System.out.println("B Display called");
 	}
 
@@ -124,7 +130,29 @@ public class B extends A
 	}
 }
 
+5. Exception thrown in overridden method can be reduced or eliminated. But, it must not throw new or broader 
+checked exception
 
+public class A 
+{
+	public void display() throws RuntimeException {
+		System.out.println("A Display called");
+	}
+}
+
+public class B extends A
+{
+	
+	public void display() throws Exception{
+		System.out.println("B Display called");
+	}
+
+	public static void main(String[] args) {
+		B b = new B();
+		b.display();
+	}
+}
+This will throw error: "Overridden method does not throw Exception
 
 II. Method Overloading
 Method overloading is methods with same name but different signature. 

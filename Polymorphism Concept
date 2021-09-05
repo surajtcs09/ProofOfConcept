@@ -1,4 +1,5 @@
 I. Method Overriding
+Only inherited methods can be overridden. And, private methods cannot be inherited. 
 
 1. Overriding method's return type in the subclass may be the subclass of overridden method's return type in the super class but not 
 the superclass of the same. 
@@ -153,6 +154,36 @@ public class B extends A
 	}
 }
 This will throw error: "Overridden method does not throw Exception
+
+6. private methods cannot be overridden. 
+public class A {
+	public void display() {
+		System.out.println("A Display called");
+	}
+}
+
+public class B extends A {	
+	public int display() {
+		System.out.println("B Display called");
+		return 2;
+	}
+
+	public static void main(String[] args) {
+		B b = new B();
+		b.display();
+	}
+}
+
+Above code will give error because overridden methods can have covariants return only. 
+display() in parent class return type is void. 
+However, return type of child class is int. 
+So, it will give compile time error: 
+"return type int is not compatible with void."
+
+However, if we make display() in parent class as private then it will not give any error. 
+This is because private class does not take part in overriding. 
+And, then, display() in child class is considered as new method. 
+It is neither a overloader or overridden method. 
 
 II. Method Overloading
 Method overloading is methods with same name but different signature. 

@@ -130,7 +130,7 @@ II. Method Overloading
 Method overloading is methods with same name but different signature. 
 Overloaded methods must change the argument list. Either data type of parameter should be different or parameter count should be different. 
 
-A method can be overloaded is the same class or in a subclass.
+A method can be overloaded in the same class or in a subclass.
 
 A overloaded method can change the return type, access modifier or can declare new or broader checked exceptions. 
 

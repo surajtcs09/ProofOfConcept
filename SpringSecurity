@@ -1,0 +1,54 @@
+WebSecurityConfigurerAdapter is officially deprecated in SpringSecurity 5.7. 
+SpringSecurity 5.7 is primarily associated with Spring Boot 2.7 or higher. 
+
+SpringSecurity 5.7 can technically work with SpringBoot version (2.3 and above), it's highly recommended to user 2.7 or later. 
+
+SpringSecurity 5.8 & higher is recommended to user SpringBoot 3.0 or later. 
+
+As per https://spring.io/blog/2022/02/21/spring-security-without-the-websecurityconfigureradapter, 
+
+@Configuration
+public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        UserDetails user = User.withDefaultPasswordEncoder()
+            .username("user")
+            .password("password")
+            .roles("USER")
+            .build();
+        auth.inMemoryAuthentication()
+            .withUser(user);
+    }
+}
+
+can be used like
+
+@Configuration
+public class SecurityConfiguration {
+    @Bean
+    public InMemoryUserDetailsManager userDetailsService() {
+        UserDetails user = User.withDefaultPasswordEncoder()
+            .username("user")
+            .password("password")
+            .roles("USER")
+            .build();
+        return new InMemoryUserDetailsManager(user);
+    }
+}
+
+Note: 
+ UserDetails user = User.withDefaultPasswordEncoder()
+            .username("user")
+            .password("password")
+            .roles("USER")
+            .build();
+Above code is not working. 
+It's giving error: Type mismatch: cannot convert from User.UserBuilder to UserDetails
+
+
+Correct code: 
+User.UserBuilder userBuilder = User.builder().username("john_doe").password("password").roles("USER");
+		UserDetails userDetails = userBuilder.build();
+
+
+
